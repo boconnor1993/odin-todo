@@ -7,7 +7,7 @@ module.exports = {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
-    publicPath: './', // Updated to handle relative paths
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -35,5 +35,6 @@ module.exports = {
     static: path.resolve(__dirname, 'dist'),
     hot: true,
     open: true,
+    watchFiles: ['src/**/*.js', 'src/**/*.css', 'src/**/*.html'],
   },
 };

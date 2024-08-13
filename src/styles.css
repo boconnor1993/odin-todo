@@ -1,0 +1,173 @@
+/* Global Style Properties */
+* {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+p {
+    color: #666;
+}
+
+/* Header */
+nav {
+    background: radial-gradient(circle, #8314b7, #3a8dff);
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    font-weight: bold;
+    z-index: 1001; /* Ensure the header is above the modal overlay */
+    position: relative;
+}
+
+/* Add Button */
+#add {
+    margin-top: 5px;
+    margin-left: 5px;
+    background-color: #2dec2d;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Todo Container */
+#todo-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    padding-top: 10px;
+}
+
+#todo-category {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    min-width: 200px;
+}
+
+.todo-card {
+    justify-content: left;
+    align-content: left;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.todo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0; /* Cover the entire viewport */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.5); /* Black with opacity */
+    display: flex; /* Use flex to center content */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%; 
+    max-width: 800px;
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Perfect centering */
+}
+
+.modal-content h2 {
+    margin-bottom: 15px;
+}
+
+
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Form Styles */
+#taskForm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+#taskForm .form-group {
+    flex: 1 1 calc(50% - 20px);
+    margin-bottom: 5px;
+}
+
+#taskForm label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#taskForm input,
+#taskForm textarea,
+#taskForm select,
+#taskForm button {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+#taskForm button {
+    background: radial-gradient(circle, #8314b7, #3a8dff);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+    flex: 1 1 100%;
+}
+
+#taskForm button:hover {
+    background: radial-gradient(circle, #5e0f8c, #2a6bcf);
+}
