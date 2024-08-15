@@ -1,5 +1,6 @@
-import './styles.css'
-import Task from './tasks'
+import './styles.css';
+import Task from './tasks';
+import { saveTaskToLocalStorage, loadTasksFromLocalStorage } from './storage';
 
 // Modal Popup
 window.addEventListener('DOMContentLoaded', () => {
@@ -25,6 +26,13 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Load tasks from localStorage on page load
+    const tasks = loadTasksFromLocalStorage();
+    tasks.forEach(task => {
+        const card = createTaskCard(task);
+        appendCardToCategory(card, task.taskStatus);
+    });
+
     form.addEventListener('submit', (event) => {
         event.preventDefault(); // Prevent default form submission
 
@@ -40,32 +48,18 @@ window.addEventListener('DOMContentLoaded', () => {
         // Create new task
         const task = new Task(project, title, description, dueDate, priority, status, notes);
 
-        // Create task card
-        const card = createTaskCard(task);
+        // Save task to localStorage
+        saveTaskToLocalStorage(task);
 
-        // Status switch to append to the correct list
-        if (task.taskStatus === 'not-started') {
-            card.classList.add('not-started');
-            document.getElementById('not-started').appendChild(card);
-        } else if (task.taskStatus === 'in-progress') {
-            card.classList.add('in-progress');
-            document.getElementById('working-on').appendChild(card);
-        } else if (task.taskStatus === 'blocked') {
-            card.classList.add('blocked');
-            document.getElementById('blocked').appendChild(card);
-        } else if (task.taskStatus === 'complete') {
-            card.classList.add('complete');
-            document.getElementById('complete').appendChild(card);
-        } else {
-            console.log('Error: Task status not found');
-        }
+        // Create task card and append to the correct category
+        const card = createTaskCard(task);
+        appendCardToCategory(card, task.taskStatus);
 
         // Clear form fields and close modal
         form.reset();
-        modal.style.display = 'none'
+        modal.style.display = 'none';
     });
 });
-
 
 function createTaskCard(task) {
     const card = document.createElement('div');
@@ -79,4 +73,20 @@ function createTaskCard(task) {
         <p>${task.notes}</p>
     `;
     return card;
+}
+
+function appendCardToCategory(card, status) {
+    if (status === 'not-started') {
+        card.classList.add('not-started');
+        document.getElementById('not-started').appendChild(card);
+    } else if (status === 'in-progress') {
+        card.classList.add('in-progress');
+        document.getElementById('working-on').appendChild(card);
+    } else if (status === 'blocked') {
+        card.classList.add('blocked');
+        document.getElementById('blocked').appendChild(card);
+    } else if (status === 'complete') {
+        card.classList.add('complete');
+        document.getElementById('complete').appendChild(card);
+    }
 }
