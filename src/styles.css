@@ -62,17 +62,49 @@ nav {
     border-radius: 8px;
     min-width: 200px;
 }
+#todo-category h2 {
+    padding-bottom: 20px;
+}
 
 .todo-card {
+    width: 12rem;
+    height: 6rem;
     justify-content: left;
     align-content: left;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
-    margin-bottom: 10px;
+    margin-top: 20px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 7px solid;
+}
+
+.todo-card h3 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.todo-card p {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.not-started {
+    border-left-color: red;
+}
+
+.in-progress {
+    border-left-color: orange;
+}
+
+.blocked {
+    border-left-color: rgba(255, 247, 0, 0.931);
+}
+
+.complete {
+    border-left-color: green;
 }
 
 .todo-card:hover {
