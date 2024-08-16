@@ -63,16 +63,24 @@ function createTaskCard(task) {
         <p><strong>Due:</strong> ${task.dueDate}</p>
         <p><strong>Priority:</strong> ${task.priority}</p>
         <p><strong>Status:</strong> ${task.taskStatus}</p>
+        <button class="delete-btn"><i class='bx bx-trash'></i></button>
         <button class="edit-btn"><i class='bx bx-edit'></i></button>
     `;
 
+    // Add event listeners for the buttons
     const editBtn = card.querySelector('.edit-btn');
     editBtn.addEventListener('click', () => {
-        openEditModal(task, card, form);
+        openEditModal(task, card);
+    });
+
+    const deleteBtn = card.querySelector('.delete-btn');
+    deleteBtn.addEventListener('click', () => {
+        deleteTaskCard(task, card);
     });
 
     return card;
 }
+
 
 function openEditModal(task, card) {
     const modal = document.getElementById('myModal');
@@ -144,3 +152,12 @@ function appendCardToCategory(task, card) {
     }
 }
 
+function deleteTaskCard(task, card) {
+    // Remove the card from the DOM
+    card.remove();
+
+    // Remove the task from localStorage
+    let tasks = loadTasksFromLocalStorage();
+    tasks = tasks.filter(t => t.title !== task.title); // or use a unique identifier if available
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
