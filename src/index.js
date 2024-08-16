@@ -10,6 +10,10 @@ window.addEventListener('DOMContentLoaded', () => {
     const addBtn = document.getElementById('add');
     const modal = document.getElementById('myModal');
     const closeBtn = document.querySelector('.close');
+    const filterBtn = document.getElementById('filter');
+    const filterModal = document.getElementById('filterModal');
+    const closeFilterBtn = filterModal.querySelector('.close');
+    const filterForm = document.getElementById('filterForm');
 
     // Ensure modal is hidden on page load
     closeModal(modal);
@@ -77,7 +81,28 @@ window.addEventListener('DOMContentLoaded', () => {
         form.removeAttribute('data-editing');
         document.querySelectorAll('.todo-card').forEach(c => c.removeAttribute('data-editing-card'));
     });
-    
+
+    // Filter Modal Functionality
+    filterBtn.addEventListener('click', () => {
+        filterModal.style.display = 'flex';
+    });
+
+    closeFilterBtn.addEventListener('click', () => {
+        filterModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === filterModal) {
+            filterModal.style.display = 'none';
+        }
+    });
+
+    filterForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const checkedPriorities = Array.from(filterForm.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+        applyFilter(checkedPriorities);
+        filterModal.style.display = 'none';
+    });
 });
 
 function createTaskCard(task) {
@@ -195,4 +220,17 @@ function deleteTaskCard(task, card) {
     let tasks = loadTasksFromLocalStorage();
     tasks = tasks.filter(t => t.title !== task.title); // or use a unique identifier if available
     localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Filter functionality
+function applyFilter(priorities) {
+    const cards = document.querySelectorAll('.todo-card');
+    cards.forEach(card => {
+        const priority = card.querySelector('p:nth-child(4)').textContent.split(': ')[1].toLowerCase();
+        if (priorities.includes(priority)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
 }
