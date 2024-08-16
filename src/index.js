@@ -1,40 +1,30 @@
 import './styles.css';
 import Task from './tasks';
 import { saveTaskToLocalStorage, loadTasksFromLocalStorage } from './storage';
+import { openModal, closeModal, handleOutsideClick } from './modal';
+
+const form = document.getElementById('taskForm');
 
 // Modal Popup
 window.addEventListener('DOMContentLoaded', () => {
     const addBtn = document.getElementById('add');
     const modal = document.getElementById('myModal');
     const closeBtn = document.querySelector('.close');
-    const form = document.getElementById('taskForm');
 
     // Ensure modal is hidden on page load
-    modal.style.display = 'none';
+    closeModal(modal);
 
-    addBtn.addEventListener('click', () => {
-        modal.style.display = 'flex';
-    });
+    addBtn.addEventListener('click', () => openModal(modal));
 
-    closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
+    closeBtn.addEventListener('click', () => closeModal(modal));
 
-    window.addEventListener('click', (event) => {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    });
-
-    // Load tasks from localStorage on page load
-    const tasks = loadTasksFromLocalStorage();
-    tasks.forEach(task => {
-        const card = createTaskCard(task);
-        appendCardToCategory(card, task.taskStatus);
-    });
+    window.addEventListener('click', (event) => handleOutsideClick(event, modal));
 
     form.addEventListener('submit', (event) => {
         event.preventDefault(); // Prevent default form submission
+
+        const isEditing = form.getAttribute('data-editing') === 'true';
+        const card = document.querySelector(`[data-editing-card="true"]`);
 
         // Capture form data
         const project = document.getElementById('taskProject').value;
@@ -45,19 +35,22 @@ window.addEventListener('DOMContentLoaded', () => {
         const status = document.getElementById('taskStatus').value;
         const notes = document.getElementById('taskNotes').value;
 
-        // Create new task
-        const task = new Task(project, title, description, dueDate, priority, status, notes);
+        if (isEditing && card) {
+            // Update the existing task card
+            const task = new Task(project, title, description, dueDate, priority, status, notes);
+            updateTaskCard(task, card);
+        } else {
+            // Create a new task card as usual
+            const task = new Task(project, title, description, dueDate, priority, status, notes);
+            saveTaskToLocalStorage(task);
+            const card = createTaskCard(task);
+            appendCardToCategory(task, card);
+        }
 
-        // Save task to localStorage
-        saveTaskToLocalStorage(task);
-
-        // Create task card and append to the correct category
-        const card = createTaskCard(task);
-        appendCardToCategory(card, task.taskStatus);
-
-        // Clear form fields and close modal
         form.reset();
-        modal.style.display = 'none';
+        closeModal(modal);
+        form.removeAttribute('data-editing');
+        document.querySelectorAll('.todo-card').forEach(c => c.removeAttribute('data-editing-card'));
     });
 });
 
@@ -67,26 +60,87 @@ function createTaskCard(task) {
     card.innerHTML = `
         <h3>${task.title}</h3>
         <p>${task.description}</p>
-        <p>${task.dueDate}</p>
-        <p>${task.priority}</p>
-        <p>${task.taskStatus}</p>
-        <p>${task.notes}</p>
+        <p><strong>Due:</strong> ${task.dueDate}</p>
+        <p><strong>Priority:</strong> ${task.priority}</p>
+        <p><strong>Status:</strong> ${task.taskStatus}</p>
+        <button class="edit-btn"><i class='bx bx-edit'></i></button>
     `;
+
+    const editBtn = card.querySelector('.edit-btn');
+    editBtn.addEventListener('click', () => {
+        openEditModal(task, card, form);
+    });
+
     return card;
 }
 
-function appendCardToCategory(card, status) {
-    if (status === 'not-started') {
-        card.classList.add('not-started');
-        document.getElementById('not-started').appendChild(card);
-    } else if (status === 'in-progress') {
-        card.classList.add('in-progress');
-        document.getElementById('working-on').appendChild(card);
-    } else if (status === 'blocked') {
-        card.classList.add('blocked');
-        document.getElementById('blocked').appendChild(card);
-    } else if (status === 'complete') {
-        card.classList.add('complete');
-        document.getElementById('complete').appendChild(card);
+function openEditModal(task, card) {
+    const modal = document.getElementById('myModal');
+    const form = document.getElementById('taskForm'); // Ensure form is defined here
+    modal.style.display = 'flex';
+
+    // Populate the form with task data
+    document.getElementById('taskProject').value = task.project || '';
+    document.getElementById('taskTitle').value = task.title || '';
+    document.getElementById('taskDescription').value = task.description || '';
+    document.getElementById('taskDueDate').value = task.dueDate || '';
+    document.getElementById('taskPriority').value = task.priority || '';
+    document.getElementById('taskStatus').value = task.taskStatus || '';
+    document.getElementById('taskNotes').value = task.notes || '';
+
+    // Track editing state
+    form.setAttribute('data-editing', 'true');
+    card.setAttribute('data-editing-card', 'true');
+}
+
+
+function updateTaskCard(task, card) {
+    const titleElement = card.querySelector('h3');
+    const descriptionElement = card.querySelector('p:nth-child(2)');
+    const dueDateElement = card.querySelector('p:nth-child(3)');
+    const priorityElement = card.querySelector('p:nth-child(4)');
+    const statusElement = card.querySelector('p:nth-child(5)');
+    const notesElement = card.querySelector('p:nth-child(6)');
+
+    if (titleElement) titleElement.textContent = task.title;
+    if (descriptionElement) descriptionElement.textContent = task.description;
+    if (dueDateElement) dueDateElement.textContent = `Due: ${task.dueDate}`;
+    if (priorityElement) priorityElement.textContent = `Priority: ${task.priority}`;
+    if (statusElement) statusElement.textContent = `Status: ${task.taskStatus}`;
+    if (notesElement) notesElement.textContent = task.notes;
+}
+
+function appendCardToCategory(task, card) {
+    let categoryId;
+    
+    switch (task.taskStatus.toLowerCase()) {
+        case 'not-started':
+            card.classList.add('not-started');
+            categoryId = 'not-started';
+            break;
+        case 'in-progress':
+            card.classList.add('in-progress');
+            categoryId = 'working-on';
+            break;
+        case 'blocked':
+            card.classList.add('blocked');
+            categoryId = 'blocked';
+            break;
+        case 'complete':
+            card.classList.add('complete');
+            categoryId = 'complete';
+            break;
+        default:
+            console.error(`No category found for status: ${task.taskStatus}`);
+            return;
+    }
+
+    const categoryElement = document.getElementById(categoryId);
+
+    if (categoryElement) {
+        categoryElement.appendChild(card);
+    } else {
+        console.error(`No category found for status: ${task.taskStatus}`);
     }
 }
+

@@ -48,47 +48,74 @@ nav {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 20px;
+    width: 100%; /* Ensure container takes up full screen width */
+    height: 100%;
     padding: 20px;
     padding-top: 10px;
+    box-sizing: border-box;
 }
 
+/* Todo Category */
 #todo-category {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+    flex: 1 1 25%; /* Each category takes 25% of the container width */
+    min-height: 100%;
     background-color: #f0f0f0;
     padding: 20px;
     border-radius: 8px;
-    min-width: 200px;
+    box-sizing: border-box; /* Ensure padding is included in the width */
+    overflow-x: hidden; /* Prevent horizontal overflow */
+    margin: 0 10px; /* Adjust margins to prevent overflow and ensure spacing */
 }
+
 #todo-category h2 {
     padding-bottom: 20px;
 }
 
+/* Todo Card */
 .todo-card {
-    width: 12rem;
-    height: 6rem;
-    justify-content: left;
-    align-content: left;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin-top: 20px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-left: 7px solid;
+    position: relative;
+    width: 300px; /* Ensure it uses full width of its container */
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #8314b7;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box; /* Include padding and borders in the element's width and height */
+}
+
+.todo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .todo-card h3 {
-    font-size: 1rem;
-    margin-bottom: 5px;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #333;
 }
 
 .todo-card p {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: #666;
+    margin-bottom: 8px;
+}
+
+.todo-card .edit-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #007BFF;
+    transition: color 0.3s ease;
+}
+
+.todo-card .edit-btn:hover {
+    color: #0056b3;
 }
 
 .not-started {
@@ -105,11 +132,6 @@ nav {
 
 .complete {
     border-left-color: green;
-}
-
-.todo-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Modal Styles */
@@ -143,7 +165,6 @@ nav {
 .modal-content h2 {
     margin-bottom: 15px;
 }
-
 
 .close {
     color: #aaa;

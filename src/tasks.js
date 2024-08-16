@@ -8,9 +8,4 @@ export default class Task {
         this.taskStatus = taskStatus;
         this.notes = notes;
     }
-
-    // Create new task
-    saveTask() {
-        
-    }
 }
