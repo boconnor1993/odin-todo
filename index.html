@@ -66,7 +66,25 @@
             </div>
         </div>
 
+        <!-- Filter Modal -->
+        <div id="filterModal" class="filter-modal">
+            <div class="filter-modal-content">
+                <span class="close">&times;</span>
+                <h2>Filter by Priority</h2>
+                <form id="filterForm">
+                    <label><input type="checkbox" value="low"> Low Priority</label>
+                    <label><input type="checkbox" value="medium"> Medium Priority</label>
+                    <label><input type="checkbox" value="high"> High Priority</label>
+                    <label><input type="checkbox" value="urgent"> Urgent</label>
+                    <button type="submit">Apply Filters</button>
+                </form>
+            </div>
+        </div>
+        
+
+
         <div id="add">+</div>
+        <div id="filter">🔍</div>
         <div id="todo-container">
             <div class="todo-category" id="not-started"><h2>Not Started</h2></div>
             <div class="todo-category" id="working-on"><h2>In Progress</h2></div>
