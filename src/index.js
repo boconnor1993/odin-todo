@@ -14,6 +14,13 @@ window.addEventListener('DOMContentLoaded', () => {
     // Ensure modal is hidden on page load
     closeModal(modal);
 
+    // Load tasks from localStorage and render them
+    const tasks = loadTasksFromLocalStorage();
+    tasks.forEach(task => {
+        const card = createTaskCard(task);
+        appendCardToCategory(task, card);
+    });
+
     addBtn.addEventListener('click', () => openModal(modal));
 
     closeBtn.addEventListener('click', () => closeModal(modal));
@@ -103,20 +110,29 @@ function openEditModal(task, card) {
 
 
 function updateTaskCard(task, card) {
-    const titleElement = card.querySelector('h3');
-    const descriptionElement = card.querySelector('p:nth-child(2)');
-    const dueDateElement = card.querySelector('p:nth-child(3)');
-    const priorityElement = card.querySelector('p:nth-child(4)');
-    const statusElement = card.querySelector('p:nth-child(5)');
-    const notesElement = card.querySelector('p:nth-child(6)');
+    // Update card content
+    card.querySelector('h3').textContent = task.title;
+    card.querySelector('p:nth-child(2)').textContent = task.description;
+    card.querySelector('p:nth-child(3)').textContent = `Due: ${task.dueDate}`;
+    card.querySelector('p:nth-child(4)').textContent = `Priority: ${task.priority}`;
+    card.querySelector('p:nth-child(5)').textContent = `Status: ${task.taskStatus}`;
 
-    if (titleElement) titleElement.textContent = task.title;
-    if (descriptionElement) descriptionElement.textContent = task.description;
-    if (dueDateElement) dueDateElement.textContent = `Due: ${task.dueDate}`;
-    if (priorityElement) priorityElement.textContent = `Priority: ${task.priority}`;
-    if (statusElement) statusElement.textContent = `Status: ${task.taskStatus}`;
-    if (notesElement) notesElement.textContent = task.notes;
+    // Remove old status class
+    card.classList.remove('not-started', 'in-progress', 'blocked', 'complete');
+
+    // Remove card from its current category
+    card.remove();
+
+    // Append card to the correct category and add the new status class
+    appendCardToCategory(task, card);
+
+    // Update the task in localStorage
+    let tasks = loadTasksFromLocalStorage();
+    tasks = tasks.map(t => t.title === task.title ? task : t);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
+
+
 
 function appendCardToCategory(task, card) {
     let categoryId;
