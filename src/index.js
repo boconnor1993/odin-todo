@@ -28,12 +28,32 @@ window.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (event) => handleOutsideClick(event, modal));
 
     form.addEventListener('submit', (event) => {
-        event.preventDefault(); // Prevent default form submission
-
+        event.preventDefault();
+    
+        // Additional validation can go here if needed
+    
+        // Ensure all required fields are filled
+        const requiredFields = ['taskProject', 'taskTitle', 'taskDescription', 'taskDueDate', 'taskPriority', 'taskStatus'];
+        let valid = true;
+    
+        requiredFields.forEach((id) => {
+            const field = document.getElementById(id);
+            if (!field.value) {
+                field.classList.add('invalid');
+                valid = false;
+            } else {
+                field.classList.remove('invalid');
+            }
+        });
+    
+        if (!valid) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+    
+        // Proceed with form submission
         const isEditing = form.getAttribute('data-editing') === 'true';
         const card = document.querySelector(`[data-editing-card="true"]`);
-
-        // Capture form data
         const project = document.getElementById('taskProject').value;
         const title = document.getElementById('taskTitle').value;
         const description = document.getElementById('taskDescription').value;
@@ -41,24 +61,23 @@ window.addEventListener('DOMContentLoaded', () => {
         const priority = document.getElementById('taskPriority').value;
         const status = document.getElementById('taskStatus').value;
         const notes = document.getElementById('taskNotes').value;
-
+    
         if (isEditing && card) {
-            // Update the existing task card
             const task = new Task(project, title, description, dueDate, priority, status, notes);
             updateTaskCard(task, card);
         } else {
-            // Create a new task card as usual
             const task = new Task(project, title, description, dueDate, priority, status, notes);
             saveTaskToLocalStorage(task);
             const card = createTaskCard(task);
             appendCardToCategory(task, card);
         }
-
+    
         form.reset();
         closeModal(modal);
         form.removeAttribute('data-editing');
         document.querySelectorAll('.todo-card').forEach(c => c.removeAttribute('data-editing-card'));
     });
+    
 });
 
 function createTaskCard(task) {
