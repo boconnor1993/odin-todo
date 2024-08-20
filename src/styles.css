@@ -37,7 +37,7 @@ nav {
 #add {
     margin: 5px 0 0 5px;
     background-color: #2dec2d;
-    color: white;
+    color: cccccc;
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -52,7 +52,7 @@ nav {
 /* Filter Button */
 #filter {
     background-color: #ffca2c;
-    color: white;
+    color: cccccc;
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -335,4 +335,41 @@ nav {
 
 .filter-modal-content button:hover {
     background: radial-gradient(circle, #5e0f8c, #2a6bcf);
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #2e2e2e; /* Lighter grey background instead of black */
+    color: #ffffff;
+}
+
+.modal-content.dark-mode,
+.filter-modal-content.dark-mode,
+.todo-card.dark-mode {
+    background-color: #444444; /* A slightly lighter grey for cards and modals */
+    color: #ffffff;
+}
+
+/* Adjust text colors in dark mode */
+.todo-card.dark-mode h3 {
+    color: #e0e0e0; /* Lighter shade of white for headings */
+}
+
+.todo-card.dark-mode p {
+    color: #cccccc; /* Slightly darker shade of white for paragraphs */
+}
+
+/* Dark Mode Button */
+#darkModeToggle {
+    background-color: #034e98; /* Different background color for the dark mode button */
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

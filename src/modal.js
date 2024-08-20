@@ -28,3 +28,22 @@ export function handleOutsideClick(event, modal) {
         closeModal(modal);
     }
 }
+
+export function openEditModal(task, card) {
+    const modal = document.getElementById('myModal');
+    const form = document.getElementById('taskForm'); // Ensure form is defined here
+    modal.style.display = 'flex';
+
+    // Populate the form with task data
+    document.getElementById('taskProject').value = task.project || '';
+    document.getElementById('taskTitle').value = task.title || '';
+    document.getElementById('taskDescription').value = task.description || '';
+    document.getElementById('taskDueDate').value = task.dueDate || '';
+    document.getElementById('taskPriority').value = task.priority || '';
+    document.getElementById('taskStatus').value = task.taskStatus || '';
+    document.getElementById('taskNotes').value = task.notes || '';
+
+    // Track editing state
+    form.setAttribute('data-editing', 'true');
+    card.setAttribute('data-editing-card', 'true');
+}
